@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101a2a">
+  <meta name="description" content="COMANDO DE CONTROLE — Operação Última Asa">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>COMANDO DE CONTROLE</title>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="sigil">✦</div><div><div class="eyebrow">CENTRAL DE OPERAÇÕES</div><h1>COMANDO <span>DE CONTROLE</span></h1><div class="sub">OPERAÇÃO ÚLTIMA ASA · SETOR 001</div></div></div>
+  <div class="status"><i></i> SISTEMA LOCAL ATIVO</div>
+</header>
+<nav class="tabs" aria-label="Navegação principal">
+  <button class="tab active" data-tab="base">Base</button>
+  <button class="tab" data-tab="missoes">Missões</button>
+  <button class="tab" data-tab="inventario">Inventário</button>
+  <button class="tab" data-tab="oficina">Oficina</button>
+  <button class="tab" data-tab="historico">Histórico</button>
+</nav>
+
+<!-- Cronômetro persistente: permanece visível em todas as abas -->
+<aside id="timerDock" class="timer-dock" aria-label="Cronômetro operacional">
+  <div class="timer-main">
+    <div class="timer-label"><span class="live-dot"></span><b>CRONÔMETRO OPERACIONAL</b><small id="timerStatus">PRONTO</small></div>
+    <strong id="timerDisplay">00:00:00</strong>
+    <small id="timerContext">Selecione a matéria e inicie uma sessão.</small>
+  </div>
+  <div class="timer-actions">
+    <button id="timerStart" class="primary">Iniciar</button>
+    <button id="timerPause" class="secondary" disabled>Pausar</button>
+    <button id="timerResume" class="secondary" hidden>Retomar</button>
+    <button id="timerStop" class="danger" disabled>Encerrar</button>
+  </div>
+</aside>
+
+<main>
+  <section id="base" class="panel active">
+    <div class="section-head"><div><div class="eyebrow">IDENTIFICAÇÃO OPERACIONAL</div><h2>Estado do operador</h2></div><span class="tag">RECRUTA · NÍVEL 1</span></div>
+    <div class="hero-grid">
+      <article class="card character">
+        <div class="avatar">✈</div><div><div class="eyebrow">OPERADOR</div><h3>Última Asa</h3><p>Reconstrução em andamento</p></div>
+        <div class="xp-block"><div class="spread"><b>EXPERIÊNCIA</b><b id="xpText">0 / 500 XP</b></div><div class="bar"><span id="xpBar"></span></div></div>
+      </article>
+      <article class="card"><div class="eyebrow">RECURSOS</div><div class="stats"><div><strong id="credits">0</strong><small>Créditos</small></div><div><strong id="medals">0</strong><small>Medalhas</small></div><div><strong id="materials">0</strong><small>Materiais</small></div></div></article>
+    </div>
+    <div class="section-head"><h2>Atributos</h2><span class="muted">Parâmetros lúdicos</span></div>
+    <div class="attribute-grid">
+      <div class="card attr"><span>Poder</span><b id="power">100</b><small>Capacidade operacional</small></div>
+      <div class="card attr"><span>Precisão</span><b id="precision">10</b><small>Desempenho em questões</small></div>
+      <div class="card attr"><span>Defesa</span><b id="defense">10</b><small>Retenção e revisão</small></div>
+      <div class="card attr"><span>Energia</span><b id="energy">100</b><small>Consistência</small></div>
+    </div>
+
+    <div class="section-head"><h2>Disciplina operacional</h2><span class="muted">Indicadores do dia</span></div>
+    <div class="metric-grid">
+      <article class="card metric"><small>Planejado</small><b id="plannedToday">3h00</b></article>
+      <article class="card metric"><small>Tempo efetivo</small><b id="studiedToday">0h00</b></article>
+      <article class="card metric"><small>Interrupções</small><b id="interruptionsToday">0</b></article>
+      <article class="card metric"><small>Tempo interrompido</small><b id="interruptedToday">0 min</b></article>
+    </div>
+    <div class="discipline-grid">
+      <article class="card">
+        <div class="spread"><h3>Alertas recorrentes</h3><span class="tag">CONFIGURÁVEL</span></div>
+        <p class="muted">Os lembretes funcionam enquanto o aplicativo estiver aberto. Notificações dependem da permissão do navegador.</p>
+        <form id="reminderForm" class="form-grid compact">
+          <label>Horário de início<input id="reminderTime" type="time" value="04:30"></label>
+          <label>Dias da semana
+            <div class="day-picker" id="dayPicker">
+              <label><input type="checkbox" value="1" checked> Seg</label><label><input type="checkbox" value="2" checked> Ter</label>
+              <label><input type="checkbox" value="3" checked> Qua</label><label><input type="checkbox" value="4" checked> Qui</label>
+              <label><input type="checkbox" value="5" checked> Sex</label><label><input type="checkbox" value="6" checked> Sáb</label>
+              <label><input type="checkbox" value="0"> Dom</label>
+            </div>
+          </label>
+          <label>Meta diária (minutos)<input id="dailyTarget" type="number" min="15" max="900" step="15" value="180"></label>
+          <label>Alerta de sessão esquecida
+            <select id="staleMinutes"><option value="30">Após 30 min</option><option value="45" selected>Após 45 min</option><option value="60">Após 60 min</option><option value="90">Após 90 min</option></select>
+          </label>
+          <div class="wide actions"><button class="primary" type="submit">Salvar alertas</button><button class="secondary" id="enableNotifications" type="button">Ativar notificações</button></div>
+          <small id="notificationStatus" class="wide muted">Notificações não configuradas.</small>
+        </form>
+      </article>
+      <article class="card">
+        <h3>Registro rápido de interrupção</h3>
+        <p class="muted">Use quando precisar parar o estudo. O cronômetro será pausado e o motivo ficará registrado.</p>
+        <label class="field-label" for="distractionType">Tipo de desvio</label>
+        <select id="distractionType">
+          <option value="Redes sociais / celular">Redes sociais / celular</option>
+          <option value="Jogo / entretenimento">Jogo / entretenimento</option>
+          <option value="Tarefa paralela">Tarefa paralela</option>
+          <option value="Interrupção externa">Interrupção externa</option>
+          <option value="Pausa necessária">Pausa necessária</option>
+          <option value="Outro">Outro</option>
+        </select>
+        <label class="field-label" for="distractionNote">Observação (opcional)</label>
+        <input id="distractionNote" type="text" maxlength="120" placeholder="Ex.: consulta ao celular">
+        <button id="logDistraction" class="secondary full" type="button">Iniciar interrupção</button>
+      </article>
+    </div>
+
+    <div class="section-head"><h2>Registrar operação de estudo</h2><span class="muted">O XP é calculado automaticamente</span></div>
+    <form id="studyForm" class="card form-grid">
+      <label>Páginas estudadas<input type="number" min="0" id="pages" value="0"></label>
+      <label>Questões fora de mapeamentos<input type="number" min="0" id="questions" value="0"></label>
+      <label>Acertos nessas questões<input type="number" min="0" id="correct" value="0"></label>
+      <label>Erros corrigidos e compreendidos<input type="number" min="0" id="corrected" value="0"></label>
+      <div class="checks">
+        <label><input type="checkbox" id="mapping"> Mapeamento concluído (+30 XP)</label>
+        <label><input type="checkbox" id="review"> Revisão concluída (+25 XP)</label>
+        <label><input type="checkbox" id="booklet"> Apostila concluída (+50 XP)</label>
+        <label><input type="checkbox" id="subject"> Matéria concluída (+250 XP)</label>
+        <label><input type="checkbox" id="simulation"> Simulado concluído (+50 XP)</label>
+      </div>
+      <label class="wide">Observação (opcional)<input type="text" id="notes" maxlength="180" placeholder="Ex.: Constitucional — art. 5º"></label>
+      <div class="wide preview"><span>XP desta operação</span><strong id="previewXP">0 XP</strong></div>
+      <button class="primary wide" type="submit">Salvar operação e contabilizar XP</button>
+    </form>
+    <div class="section-head"><h2>Proteção dos dados</h2></div>
+    <article class="card backup">
+      <p>Os dados ficam neste navegador, no dispositivo. Exporte um backup periodicamente para evitar perda acidental.</p>
+      <div class="actions"><button id="exportBtn" class="secondary">Exportar backup</button><label class="file-btn">Importar backup<input id="importFile" type="file" accept="application/json"></label></div>
+      <small id="saveStatus" class="muted">Banco local IndexedDB pronto.</small>
+    </article>
+  </section>
+
+  <section id="missoes" class="panel">
+    <div class="section-head"><div><div class="eyebrow">ORDENS DE OPERAÇÃO</div><h2>Missões</h2></div><span class="tag">CAMPANHA 01</span></div>
+    <article class="card mission">
+      <div class="spread"><span class="tag gold">MISSÃO PRINCIPAL</span><span class="muted">Operação: Despertar</span></div>
+      <h3>Estabelecer a primeira linha de avanço</h3>
+      <p>Conclua um bloco real de estudo, mapeamento, revisão e bateria de questões. O progresso será registrado quando as atividades correspondentes forem salvas.</p>
+      <div class="mission-progress"><div class="spread"><b>Progresso</b><b id="missionPct">0%</b></div><div class="bar"><span id="missionBar"></span></div></div>
+      <ul class="objectives" id="objectives"></ul>
+      <div class="reward">Recompensa: <b>100 XP · 50 créditos · loot de operação</b></div>
+      <button id="claimMission" class="primary" disabled>Concluir missão</button>
+      <small class="muted" id="missionStatus">Aguardando cumprimento dos objetivos.</small>
+    </article>
+    <div class="section-head"><h2>Ameaças identificadas</h2></div>
+    <div class="enemy-grid">
+      <article class="card enemy"><b>O CORROSOR</b><p>Procrastinação e adiamento. Contramedida: iniciar um bloco curto.</p></article>
+      <article class="card enemy"><b>A NÉVOA</b><p>Esquecimento. Contramedida: revisão e recuperação ativa.</p></article>
+      <article class="card enemy"><b>O ENXAME</b><p>Distração e fragmentação. Contramedida: bloco concentrado.</p></article>
+      <article class="card enemy"><b>O CERCO</b><p>Acúmulo de tarefas. Contramedida: priorização objetiva.</p></article>
+    </div>
+    <div class="section-head"><h2>Ameaças à disciplina</h2></div>
+    <div id="disciplineEnemies" class="enemy-grid"></div>
+    <div class="section-head"><h2>Missões de contenção</h2></div>
+    <div id="disciplineMissions" class="mission-grid"></div>
+    <small class="muted">Ameaças em monitoramento. Nenhum ataque ou penalidade é aplicado por ausência de registro, descanso ou pausa deliberada.</small>
+  </section>
+
+  <section id="inventario" class="panel">
+    <div class="section-head"><div><div class="eyebrow">ARMAZÉM DA BASE</div><h2>Inventário de materiais</h2></div><span class="tag">RECURSOS</span></div>
+    <div id="inventoryList" class="inventory-grid"></div>
+    <div class="section-head"><h2>Equipamentos</h2></div>
+    <div class="inventory-grid">
+      <article class="card item"><div class="item-icon">🛡</div><div><b>Armadura básica</b><small>Comum · Equipamento inicial</small></div><span class="owned">1</span></article>
+      <article class="card item"><div class="item-icon">⌨</div><div><b>Terminal de operações</b><small>Comum · Equipamento inicial</small></div><span class="owned">1</span></article>
+      <article class="card item"><div class="item-icon">✈</div><div><b>Uniforme de recruta</b><small>Comum · Equipamento inicial</small></div><span class="owned">1</span></article>
+    </div>
+  </section>
+
+  <section id="oficina" class="panel">
+    <div class="section-head"><div><div class="eyebrow">ENGENHARIA E MANUTENÇÃO</div><h2>Oficina de operações</h2></div><span class="tag gold">CRAFTING</span></div>
+    <p class="muted">Receitas e projetos são desbloqueados durante a campanha. Os custos abaixo são exemplos iniciais de fabricação.</p>
+    <div id="recipes" class="recipe-grid"></div>
+  </section>
+
+  <section id="historico" class="panel">
+    <div class="section-head"><div><div class="eyebrow">REGISTRO DE BORDO</div><h2>Histórico de operações</h2></div><span class="tag">AUDITORIA</span></div>
+    <div class="section-head"><h3>Sessões de estudo</h3></div><div id="sessionHistory" class="history-list"></div>
+    <div class="section-head"><h3>Interrupções registradas</h3></div><div id="distractionHistory" class="history-list"></div>
+    <div class="section-head"><h3>Relatório semanal</h3></div>
+    <article class="card weekly-report">
+      <div class="metric-grid">
+        <div><small>Tempo efetivo</small><b id="weekStudy">0h00</b></div>
+        <div><small>Interrupções</small><b id="weekInterruptions">0</b></div>
+        <div><small>Tempo interrompido</small><b id="weekLost">0 min</b></div>
+        <div><small>Sessões concluídas</small><b id="weekSessions">0</b></div>
+      </div>
+      <button id="exportReport" class="secondary">Exportar relatório semanal</button>
+    </article>
+    <div class="section-head"><h3>Histórico de XP e campanha</h3></div>
+    <div id="historyList" class="history-list"></div>
+  </section>
+</main>
+<footer>COMANDO DE CONTROLE · OPERAÇÃO ÚLTIMA ASA <span>BUILD 0.5 · BANCO LOCAL</span></footer>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>
